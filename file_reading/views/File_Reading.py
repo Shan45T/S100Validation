@@ -22,6 +22,7 @@ if __name__ == "__main__":
 if len(sys.argv) < 2:
     raise Exception("Please pass the input file")
 
+print(' Just small testing purpose in git')
 fileName = sys.argv[1]
 if(fileName.endswith('.h5') or fileName.endswith('.H5')):
     length = len(fileName)
