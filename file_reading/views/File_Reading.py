@@ -18,6 +18,7 @@ if __name__ == "__main__":
     format = "%(asctime)s: %(message)s"
     logging.basicConfig(filename="output.txt", format=format, level=logging.INFO,
                         datefmt="%Y%m%d_%H:%M:%S")
+print('testing')
 
 if len(sys.argv) < 2:
     raise Exception("Please pass the input file")

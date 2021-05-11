@@ -1,0 +1,204 @@
+ body{
+	padding: 0;
+	 margin: 0;
+ }
+ .sidepanelbuttons{
+	width: 100%; background-color: #0f5c93; 
+ }
+.leftsidenav {
+            height: 91%;
+            width: 290px;
+            position: absolute;
+            z-index: 100000;
+            top: 55px;
+            left: 0;
+			
+            background-color: #ecf2ff;
+            overflow-x: hidden;
+            overflow-y: auto;
+            transition: 0.5s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+        }
+            .leftsidenav .closebtn {
+                font-size: 1rem;
+                margin-left: 0px;
+                padding: 4px;
+                text-align: right;
+                margin-right: 10px;
+                color:#fff;
+				
+            }
+			 .rightsidenav {
+            height: 91%;
+            width: 290px;
+            position: absolute;
+            top: 55px;
+            right: 0;
+            background-color: #ecf2ff;
+            overflow-x: hidden;
+            overflow-y: auto;
+            transition: 0.5s;
+            padding-top: 0px;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+            z-index: 100001;
+        }
+        
+         .rightsidenav .closebtn {
+            font-size: 1rem;
+            margin-left: 10px;
+            padding: 4px;
+            text-align: left;
+            color:#fff;  
+			
+        }
+        .bottomsidenav {
+            width: auto;
+            height: 270px;
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right:0;
+			overflow: hidden;
+			z-index:99;
+            background-color: #fff;
+            transition: 0.5s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+            box-sizing: border-box;
+            margin:0 auto;
+			margin-left:290px;
+			margin-right: 290px;
+			transition: all 0.3s;
+        }
+        .bottomsidenav_2 {
+            width: 100%;
+            height: 0;
+            position: absolute;
+            z-index: 99999;
+            bottom: 0;
+            left: 0;
+            right:0;
+            background-color: #fff;
+            transition: 0.5s;
+            transition: all 0.3s;
+            box-shadow: 0 2px 5px 0 rgba(0,0,0,.16), 0 2px 10px 0 rgba(0,0,0,.12);
+            box-sizing: border-box;
+            margin:0 auto;
+        }
+            .bottomsidenav> .closebtn {
+              
+            }
+
+        #centerPane {
+            transition: margin-left .5s;
+            position: relative;
+            height: calc( 100vh - 55px) !important;
+            box-sizing: border-box;
+			margin-left:290px;
+			margin-right: 290px;
+        }
+ .leftpanelbtn {
+            font-size: 25px;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            border-radius: 0px 7px 7px 0px;
+            background-color: #0f5c93;
+            color: #fff;
+            height: 40px;
+			line-height: 40px;
+            width: 18px;
+            z-index: 99999;
+            left:0px;
+        }
+        .rightpanelbtn {
+            font-size: 25px;
+            cursor: pointer;
+            position: absolute;
+            top: 15px;
+            right: 0px;
+            border-radius: 7px 0px 0px 7px;
+            background-color: #0f5c93;
+            color: #fff;
+            height: 40px;
+			line-height: 40px;
+            width: 18px;
+            z-index: 99999;
+            text-align: right;
+        }
+        #bottompanelbtn {
+            font-size: 21px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            border-radius: 7px 7px 0px 0px;
+            background-color: #0f5c93;
+            color: #fff;
+            height: 21px;
+            width: 55px;
+            line-height: 18px;
+            z-index: 99999;
+            transform: translate(-50%, 0%);
+            text-align: center;
+            transition: 0.5s;
+            transition: all 0.3s;
+            display: none;
+        }
+         #bottompanelbtn_2 {
+            font-size: 21px;
+            cursor: pointer;
+            position: absolute;
+            bottom: 0;
+            right: 0%;
+            border-radius: 7px 7px 0px 0px;
+            background-color: #0f5c93;
+            color: #fff;
+            height: 18px;
+            width: 55px;
+            line-height: 18px;
+            z-index: 99999;
+            transform: translate(-50%, 0%);
+            text-align: center;
+            transition: 0.5s;
+            transition: all 0.3s;
+            display:none;
+        }
+        #closebottomnav {
+            width: 55px;
+            height: 20px;
+            left: 50%;
+            top: 0px;
+            transform: translate(-50%, 0%);
+            text-align: center;
+            border-radius: 0px 0px 7px 7px;
+            background-color: #0f5c93;
+            line-height: 18px;
+            position: absolute;
+            display: block;
+            font-size: 21px;
+			transition: 0.5s;
+			transition: all 0.3s;
+            cursor: pointer;
+        }
+          #closebottomnav_2 {
+            width: 55px;
+            height: 20px;
+            right: 0%;
+            top: -20px;
+            transform: translate(-50%, 0%);
+            text-align: center;
+            border-radius: 7px 7px 0px 0px;
+            background-color: #0072c6;
+            line-height: 18px;
+            position: absolute;
+            display: none;
+            font-size: 21px;
+            cursor: pointer;
+        }
+		#map{
+			width:100%;
+			height:100%;
+		}
