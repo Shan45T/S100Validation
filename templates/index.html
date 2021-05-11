@@ -1,0 +1,228 @@
+﻿{% load static %}
+{% csrf_token %}
+<!DOCTYPE html>
+<html lang="en">
+  
+<head>
+    <title>S-100</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=7, IE=9" />
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
+   <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
+ 
+    <!--<link rel="icon" href="/SiteAssets/MapImages/favicon.ico" type="image/x-icon" /> -->
+    
+    <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
+    <link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet"/>
+	 <link rel="stylesheet" href="{% static "css/ol.css" %}" type="text/css">
+    <script type="text/javascript" src="{% static "js/jquery-1.12.4.js" %}"></script>
+ <script src="{% static "js/ol.js" %}"></script>
+  <script src="{% static "js/map.js" %}"></script>
+
+<style>
+
+
+</style>
+</head>
+<body>
+ 
+    <div>
+	<div style="height:55px; width:100%;border-bottom: 2px solid #0f5c93;">
+	<h3 style="padding:6px; color: #0f5c93;">S-100 V&V Application</h3>
+	</div>
+        <div id="leftPane" class="leftsidenav">
+            <div style="text-align:right;" class="sidepanelbuttons">
+			<a href="javascript:void(0)" class="closebtn" onclick="LeftcloseNav()">
+			<i class="fas fa-arrow-left"></i></a></div>
+			<div style="height:250px; border-bottom:1px solid #ccc">
+			<div class="form-group row" style="margin-top:15px;">
+                        <label for="" class="col-sm-6 col-form-label" style="padding-left:30px;">Product Lines :- </label>
+                        <div class="col-sm-5" style="padding-left:0px; padding-right:0px;">
+                           <select class="form-control" id="">
+                              <option>-Select-</option>
+                              <option>S-101</option>
+                              <option>S-102</option>
+							   <option>S-103</option>
+							   <option>S-104</option>
+							   
+                           </select>
+                        </div>
+                     </div>
+					 <button type="button" class="btn btn-primary" style="margin:0 auto;
+					 text-align:center; display:block; position:relative; top:10px; left:43px;">Submit</button>
+            </div>
+			<div style="padding:10px;">
+			<p>Header information will be displayed here</p>
+			<p>Header information will be displayed here</p>
+			<p>Header information will be displayed here</p>
+			</div>
+        </div>
+		
+		
+        <div id="centerPane">
+            <span class="leftpanelbtn" onclick="LeftopenNav()">
+			<i class="fas fa-angle-right"></i></span>
+            <span class="rightpanelbtn" onclick="openrightNav()">
+			<i class="fas fa-angle-left"></i></span>
+			<div id="map" class="map"></div>
+			
+        </div>
+		
+        <div id="rightPane" class="rightsidenav">
+            <div class="sidepanelbuttons"><a href="javascript:void(0)" class="closebtn" onclick="closerightNav()"><i class="fas fa-arrow-right"></i></a></div>
+        
+
+  
+  
+  <div id="accordion">
+    <div class="card">
+      <div class="card-header">
+        <a class="card-link" data-toggle="collapse" href="#collapseOne">
+          Collapsible Group Item #1
+        </a>
+      </div>
+      <div id="collapseOne" class="collapse show" data-parent="#accordion">
+        <div class="card-body">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+        Collapsible Group Item #2
+      </a>
+      </div>
+      <div id="collapseTwo" class="collapse" data-parent="#accordion">
+        <div class="card-body">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">
+        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+          Collapsible Group Item #3
+        </a>
+      </div>
+      <div id="collapseThree" class="collapse" data-parent="#accordion">
+        <div class="card-body">
+          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+        </div>
+      </div>
+    </div>
+  </div>
+
+		
+        </div>
+		
+        <div id="bottomPane" class="bottomsidenav">
+            
+			
+            <div id="closebottomnav"><a href="javascript:void(0)"
+			class="closebtn" onclick="bottomcloseNav()" style=" color: #fff; ">
+			<i class="fas fa-angle-down"></i></a></div>
+			<div class="container">
+  
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="nav-item">
+      <a class="nav-link active" data-toggle="tab" href="#menu1">Errors</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu2">Processing information</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" data-toggle="tab" href="#menu3">Description</a>
+    </li>
+  </ul>
+
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div id="menu1" class="container tab-pane active"><br>
+      <h3>Errors</h3>
+      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+    </div>
+    <div id="menu2" class="container tab-pane fade"><br>
+      <h3>Processing information</h3>
+      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+    </div>
+    <div id="menu3" class="container tab-pane fade"><br>
+      <h3>Description</h3>
+      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+    </div>
+  </div>
+</div>   
+        </div>
+		<span id="bottompanelbtn" onclick="bottomopenNav()">
+			<i class="fas fa-angle-up"></i></span>
+    </div>
+    <script>
+        function openrightNav() {
+            document.getElementById("rightPane").style.width = "290px";
+			document.getElementById("centerPane").style.marginRight = "290px";
+            document.getElementById("bottomPane").style.right = "290px";
+            document.getElementById("spatialSearchCP").style.width = "100%";
+            document.getElementById("queryBuilderCP").style.width = "100%";
+			map.updateSize();
+        }
+
+        function closerightNav() {
+            document.getElementById("rightPane").style.width = "0";
+            document.getElementById("bottomPane").style.right = "0";
+			document.getElementById("centerPane").style.marginRight = "0px";
+			 document.getElementById("bottomPane").style.marginRight = "0px";
+			 map.updateSize();
+			
+        }
+
+        function LeftopenNav() {
+            document.getElementById("leftPane").style.width = "290px";
+            document.getElementById("bottomPane").style.left = "290px";
+			document.getElementById("centerPane").style.marginLeft = "290px";
+			map.updateSize();
+        }
+
+        function LeftcloseNav() {
+            document.getElementById("leftPane").style.width = "0";
+            document.getElementById("bottomPane").style.left = "0";
+			document.getElementById("centerPane").style.marginLeft = "0px";
+			 document.getElementById("bottomPane").style.marginLeft = "0px";
+			 map.updateSize();
+        }
+
+        function bottomopenNav() {
+            document.getElementById("bottomPane").style.display = "block";
+            document.getElementById("closebottomnav").style.display = "block";
+            document.getElementById("bottompanelbtn").style.display = "none";
+			map.updateSize();
+        }
+
+        function bottomcloseNav() {
+            document.getElementById("bottomPane").style.display = "none";
+            document.getElementById("closebottomnav").style.display = "none";
+            document.getElementById("bottompanelbtn").style.display = "block";
+			map.updateSize();
+        }
+        function bottomopenNav_2() {
+            document.getElementById("bottomPane_2").style.height = "270px";
+            document.getElementById("closebottomnav_2").style.display = "block";
+            document.getElementById("bottompanelbtn_2").style.display = "none";
+        }
+        function bottomcloseNav_2() {
+          
+            document.getElementById("bottomPane_2").style.height = "0";
+            document.getElementById("closebottomnav_2").style.display = "none";
+            document.getElementById("bottompanelbtn_2").style.display = "block";
+        }
+		 </script>
+		
+        <!-- <script src="js/jquery.min.js"></script> -->
+  <script src="{% static "js/popper.min.js" %}"></script>
+  <script src="{% static "js/bootstrap.min.js" %}"></script>
+     
+   
+   
+   
+</body>
+</html>
