@@ -2,6 +2,10 @@
 	padding: 0;
 	 margin: 0;
  }
+ .nopadding{
+	 padding-left:0px;
+	 padding-right:0px;
+ }
  .sidepanelbuttons{
 	width: 100%; background-color: #0f5c93; 
  }

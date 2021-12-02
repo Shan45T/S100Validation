@@ -1,8 +1,8 @@
 ﻿{% load static %}
 {% csrf_token %}
+{{ graph|safe }}
 <!DOCTYPE html>
 <html lang="en">
-  
 <head>
     
     <title>S-100</title>
@@ -10,27 +10,303 @@
     <meta http-equiv="X-UA-Compatible" content="IE=7, IE=9" />
     <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no" />
    <link rel="stylesheet" href="{% static "css/bootstrap.min.css" %}">
- 
-    <!--<link rel="icon" href="/SiteAssets/MapImages/favicon.ico" type="image/x-icon" /> -->
     
     <link rel="stylesheet" type="text/css" href="{% static "css/style.css" %}">
     <link href="{% static "css/font-awesome.min.css" %}" rel="stylesheet"/>
 	 <link rel="stylesheet" href="{% static "css/ol.css" %}" type="text/css">
-    <script type="text/javascript" src="{% static "js/jquery-1.12.4.js" %}"></script>
- <script src="{% static "js/ol.js" %}"></script>
-  <script src="{% static "js/map.js" %}"></script>
+	<script type="text/javascript" src="{% static "js/jquery-1.12.4.js" %}"></script>
+	<script src="{% static "js/ol.js" %}"></script>
+	<script src="{% static "js/map.js" %}"></script>
+	<style>
+	.footer {
+		width: 100%;
+	}
+	
+	.footer_color {
+		background: #0f5c93;
+	}
+	
+	.bt_clor {
+		color: #fff;
+		background-color: #0f5c93;
+		border-color: #0f5c93;
+	}
+	
+	button#updateButton {
+		background-color: #0f5c93;
+		color: #fff;
+		border-color: #0f5c93;
+	}
+	</style>
+	<script>
+	function uploadFile() {
+		var metavalue = $("#metadata").is(":checked");
+		var headervalue = $("#header").is(":checked");
+		let formData = new FormData();
+		formData.append("file", fileupload.files[0]);
+		formData.append("metadata", metavalue);
+		formData.append("header", headervalue);
+		$.ajax({
+			type: "POST",
+			url: "/S100Verification/Validation/file-reading/102",
+			contentType: false,
+			processData: false,
+			async: false,
+			data: formData,
+			success: function(response) {
+				$("#headers").html("");
+				if(response != null && response != "") {
+					if(headervalue == "true") {
+						var headerRespones = JSON.parse(response);
+						console.log(headerRespones);
+						$.each(headerRespones, function(key, value) {
+							$("#headers").append(key + " = " + value);
+						});
+					} else {
+						var metadataRespones = JSON.parse(response);
+						console.log(metadataRespones);
+						$.each(metadataRespones, function(key, value) {
+							$("#headers").append(key + " = " + value);
+						});
+					}
+				} else {
+					alert("Form data not updated" + response);
+					return false;
+				}
+			},
+			error: function(xhr, status, error) {
+				alert(error);
+				return false;
+			},
+			failure: function(xhr, status, failure) {
+				alert(failure);
+				return false;
+			},
+		});
+	}
 
-<style>
+function updateFile() { 
 
+    var metavalue = $('#metadata').is(':checked');    
+    var headervalue = $('#header').is(':checked');
+    
+    let formData = new FormData();           
+    formData.append("file", fileupload.files[0]);    
+    formData.append("metadata", metavalue);
+    formData.append("header", headervalue);
 
-</style>
+      $.ajax({
+            type: 'POST',
+            url: '/S100Verification/Validation/filemodify',  
+            contentType: false,            
+            processData: false,
+            async: false,
+            data: formData,            
+            success: function (response) {                
+              $("#headers").html('')                  
+                  if (response != null && response != '') {
+                      if(headervalue == "true"){
+                        var headerRespones = JSON.parse(response);
+                        console.log(headerRespones); 
+                        $.each(headerRespones, function(key,value){
+                          $("#headers").append(key +' = '+value);
+                        }); 
+                      }
+                      else{
+                        var metadataRespones = JSON.parse(response);
+                        console.log(metadataRespones); 
+                        $.each(metadataRespones, function(key,value){
+                          $("#headers").append(key +' = '+value);
+                        }); 
+                      }
+                  } else {
+                        alert("Form data not updated" + response);
+                        return false;
+                  }
+            }, error: function (xhr, status, error) {
+                  alert(error);
+                  return false; 
+            },
+            failure: function (xhr, status, failure) {
+                  alert(failure);
+                  return false;
+            }
+      });
+} 
+function Display() { 
+    
+  $.ajax({
+          type: "GET",
+          url: '/S100Verification/Validation/file-validation/102',
+          data: {},
+          async: true,
+          success: function (response, status, xhr) {
+                alert(response);
+                $("#headers").html('')                  
+                  if (response != null && response != '') {
+                      var headerRespones = JSON.parse(response);
+                      console.log(headerRespones); 
+                      $.each(headerRespones, function(key,value){
+                        $("#headers").append(key +' = '+value);
+                      }); 
+                } else {
+                      alert("Form data not updated" + response);
+                      return false;
+                }
+            }, error: function (xhr, status, error) {
+                  alert(error);
+                  return false; 
+            },
+            failure: function (xhr, status, failure) {
+                  alert(failure);
+                  return false;
+            }
+      });
+} 
+$(document).ready(function () {              
+  $('#updateButton').prop('disabled','disabled');
+  //loadLogs();
+  getProdLines();  
+  $('#id_prodLine').on('change', function () {
+      var prodLine = $("#id_prodLine").val();
+      if ((prodLine == null || prodLine == '' || prodLine == '--Please Specify--' || prodLine == 'undefined')) {
+            alert('Plase select Product Line ');            
+            return false;
+      }
+      if ((prodLine != "S-101" && prodLine != "S-102" && prodLine != "S-104" && prodLine != "S-111")) {
+            alert('No datasets are found for this product line..Plase select valid Product Line ');
+            return false;
+      }
+  });
+  $('#override').on('change', function () {
+    if($('#override').is(':checked')){
+      $('#uploadButton').prop('disabled',true);
+      $('#updateButton').prop('disabled',false);
+    }
+    else{
+      $('#uploadButton').prop('disabled',false);
+      $('#updateButton').prop('disabled',true);
+    }
+  });
+}); 
+function loadMap(){
+
+  var metavalue = $('#metadata').is(':checked');    
+  var headervalue = $('#header').is(':checked');
+
+  let formData = new FormData();           
+  formData.append("file", fileupload.files[0]);    
+  formData.append("metadata", metavalue);
+  formData.append("header", headervalue);
+      $.ajax({
+            type: 'POST',
+            url: '/S100Verification/Validation/S100map',            
+            contentType: false,            
+            processData: false,
+            async: false,
+            data: formData,            
+            success: function (response) {                                    
+                if (response != null && response != '') {
+                    console.log(response);
+                    $("#map").html('');
+                    data = JSON.parse(response)
+                    //$("#map").html(response.message);
+                    $("#map").html('<img src="'+data.url+'">');
+                }
+                else {
+                      alert(" Do not have prodLine details in database ");
+                      return false;
+                }
+          },
+          error: function (xhr, status, error) {
+                alert(error);
+                return false;
+          },
+          failure: function (xhr, status, failure) {
+                alert(failure);
+                return false;
+          }
+    });
+}
+function getProdLines() {    
+    $.ajax({
+          type: "GET",
+          url: "/S100Verification/Validation/productline",
+          data: {},
+          async: false,
+          success: function (response) {
+                if (response != null && response != '') {
+                      var prodLineArr = JSON.parse(response);
+                      if (prodLineArr.length != null) {
+                            $("#id_prodLine").append("<option value='Please Specify'>Please Specify</option");                              
+                            for (var i = 0; i < prodLineArr.length; i++) {
+                                  if(prodLineArr[i]["name"] != undefined && prodLineArr[i]["name"] !=''){
+                                    $("#id_prodLine").append("<option value=" + prodLineArr[i]["name"] + ">" + prodLineArr[i]["name"] + "</option");
+                                    }
+                            }
+                            $('#home').append('</br> End: Retrieving productlines from the database: ' + new Date($.now()));
+                      }
+                      else {
+                            alert(" Unable to fetch product line details from database ");
+                            return false;
+                      }
+                }
+                else {
+                      alert(" Do not have prodLine details in database ");
+                      return false;
+                }
+          },
+          error: function (xhr, status, error) {
+                alert(error);
+                return false;
+          },
+          failure: function (xhr, status, failure) {
+                alert(failure);
+                return false;
+          }
+    });
+  }
+function loadLogs(){
+  $.ajax({
+          type: "GET",
+          url: '/S100Verification/Validation/Log',
+          data: {},
+          async: true,
+          success: function (response, status, xhr) {                
+                $("#menu1").html('')                  
+                  if (response != null && response != '') {
+                      var logRespones = response;
+                      //console.log(logRespones);
+                      //var htmlString = String(logRespones).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+                      var rows = String(logRespones).split('\n');
+                      for(var i=0; i<rows.length; i++){
+                        $("#menu1").append(rows[i]);  
+                      }                     
+                      setTimeout(loadLogs,30000)     //for Every 30 seconds                
+                } else {
+                      alert("Log data not updated" + response);
+                      return false;
+                }
+            }, error: function (xhr, status, error) {
+                  alert(error);
+                  return false; 
+            },
+            failure: function (xhr, status, failure) {
+                  alert(failure);
+                  return false;
+            }
+      });
+}  
+</script>  
 </head>
 <body>
  
-    <div>
-	<div style="height:55px; width:100%;border-bottom: 2px solid #0f5c93;">
-	<h3 style="padding:6px; color: #0f5c93;">S-100 V&V Application</h3>
-	</div>
+     <div class="container-fluid">
+	<div class="row" style="background:#0f5c93;">
+            <div class="col-sm-12 nopadding">
+               <h3 style="color:#fff; padding:10px; margin-bottom:0px; text-align: center;">S-100 V&amp;V Application</h3>
+            </div>
+         </div>
         <div id="leftPane" class="leftsidenav">
             <div style="text-align:right;" class="sidepanelbuttons">
 			<a href="javascript:void(0)" class="closebtn" onclick="LeftcloseNav()">
@@ -39,191 +315,178 @@
 			<div class="form-group row" style="margin-top:15px;">
                         <label for="" class="col-sm-6 col-form-label" style="padding-left:30px;">Product Lines :- </label>
                         <div class="col-sm-5" style="padding-left:0px; padding-right:0px;">
-                           <select class="form-control" id="">
-                              <option>-Select-</option>
-                              <option>S-101</option>
-                              <option>S-102</option>
-							   <option>S-103</option>
-							   <option>S-104</option>
-							   
+                           <select class="form-control" id="id_prodLine">
                            </select>
                         </div>
                      </div>
-					 <button type="button" class="btn btn-primary" style="margin:0 auto;
-					 text-align:center; display:block; position:relative; top:10px; left:43px;">Submit</button>
-            </div>
-			<div style="padding:10px;">
-			<p>Header information will be displayed here</p>
-			<p>Header information will be displayed here</p>
-			<p>Header information will be displayed here</p>
+				<div class="form-group row" style="margin-top: 15px;">
+					<input type="file" id="fileupload" name="file" style="padding-left: 22px;" /> </div>
+				<div class="form-check" style="margin-top: 15px; padding-left: 27px;">
+					<label class="form-check-label">
+						<input type="checkbox" id="override" name="override" class="form-check-input" value="" />Updated file </label>
+				</div>
+				<div class="form-group row" style="margin-top: 15px;">
+					<button type="button" class="btn btn-primary bt_clor btn-sm" style="margin-left: 22px;" id="uploadButton" onclick="uploadFile();">Upload</button>
+					<button type="button" class="btn btn-primary bt_clor btn-sm ml-3" id="updateButton" onclick="updateFile();">Update</button>
+				</div>
 			</div>
-        </div>
-		
-		
-        <div id="centerPane">
-            <span class="leftpanelbtn" onclick="LeftopenNav()">
-			<i class="fas fa-angle-right"></i></span>
-            <span class="rightpanelbtn" onclick="openrightNav()">
-			<i class="fas fa-angle-left"></i></span>
+			<div style="height:150px; margin-top:20px;">        
+				<div class="form-check-inline">
+					<label class="form-check-label">
+						<input type="checkbox" id="metadata" name="metadata" class="form-check-input" value="" style="margin-left:10px;" />metadata </label>
+				</div>
+				<div class="form-check-inline">
+					<label class="form-check-label">
+						<input type="checkbox" id="header" name="header" class="form-check-input" value="" />header </label>
+				</div>
+				<div class="form-group row" style="margin-top: 15px;">
+					<button type="button" class="btn btn-primary bt_clor btn-sm" style="margin-left: 22px;" onclick="Display();">Display</button>
+					<button type="button" class="btn btn-primary bt_clor btn-sm ml-3" onclick="loadMap();">LoadMap</button>
+				</div>
+			</div>
+            
+			<div id="headers" style="padding: 10px;">
+				<!--<p>Header information will be displayed here</p>-->
+			</div>
+		</div>
+		<div id="centerPane"> <span class="leftpanelbtn" onclick="LeftopenNav()"> <i class="fas fa-angle-right"></i></span> <span class="rightpanelbtn" onclick="openrightNav()"> <i class="fas fa-angle-left"></i></span>
 			<div id="map" class="map"></div>
 			
         </div>
 		
         <div id="rightPane" class="rightsidenav">
             <div class="sidepanelbuttons"><a href="javascript:void(0)" class="closebtn" onclick="closerightNav()"><i class="fas fa-arrow-right"></i></a></div>
-        
-
-  
-  
   <div id="accordion">
     <div class="card">
-      <div class="card-header">
-        <a class="card-link" data-toggle="collapse" href="#collapseOne">
-          Collapsible Group Item #1
-        </a>
-      </div>
+					<div class="card-header"> <a class="card-link" data-toggle="collapse" href="#collapseOne">
+                                Collapsible Group Item #1
+                            </a> </div>
       <div id="collapseOne" class="collapse show" data-parent="#accordion">
-        <div class="card-body">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </div>
-      </div>
+						<div class="card-body"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
+					</div>
     </div>
     <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
-        Collapsible Group Item #2
-      </a>
-      </div>
-      <div id="collapseTwo" class="collapse" data-parent="#accordion">
-        <div class="card-body">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="card-header">
-        <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
-          Collapsible Group Item #3
-        </a>
-      </div>
-      <div id="collapseThree" class="collapse" data-parent="#accordion">
-        <div class="card-body">
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
-        </div>
-      </div>
-    </div>
-  </div>
-
-		
-        </div>
-		
-        <div id="bottomPane" class="bottomsidenav">
-            
-			
-            <div id="closebottomnav"><a href="javascript:void(0)"
-			class="closebtn" onclick="bottomcloseNav()" style=" color: #fff; ">
-			<i class="fas fa-angle-down"></i></a></div>
+					<div class="card-header"> <a class="collapsed card-link" data-toggle="collapse" href="#collapseTwo">
+                                Collapsible Group Item #2
+                            </a> </div>
+					<div id="collapseTwo" class="collapse" data-parent="#accordion">
+						<div class="card-body"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
+					</div>
+				</div>
+				<div class="card">
+					<div class="card-header"> <a class="collapsed card-link" data-toggle="collapse" href="#collapseThree">
+                                Collapsible Group Item #3
+                            </a> </div>
+					<div id="collapseThree" class="collapse" data-parent="#accordion">
+						<div class="card-body"> Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. </div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div id="bottomPane" class="bottomsidenav">
+			<div id="closebottomnav">
+				<a href="javascript:void(0)" class="closebtn" onclick="bottomcloseNav()" style="color: #fff;"> <i class="fas fa-angle-down"></i></a>
+			</div>
 			<div class="container">
-  
-  <!-- Nav tabs -->
-  <ul class="nav nav-tabs" role="tablist">
-    <li class="nav-item">
-      <a class="nav-link active" data-toggle="tab" href="#menu1">Errors</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu2">Processing information</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" data-toggle="tab" href="#menu3">Description</a>
-    </li>
-  </ul>
-
-  <!-- Tab panes -->
-  <div class="tab-content">
-    <div id="menu1" class="container tab-pane active"><br>
-      <h3>Errors</h3>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
-    </div>
-    <div id="menu2" class="container tab-pane fade"><br>
-      <h3>Processing information</h3>
-      <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
-    </div>
-    <div id="menu3" class="container tab-pane fade"><br>
-      <h3>Description</h3>
-      <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
-    </div>
-  </div>
-</div>   
-        </div>
-		<span id="bottompanelbtn" onclick="bottomopenNav()">
-			<i class="fas fa-angle-up"></i></span>
+				<!-- Nav tabs -->
+				<ul class="nav nav-tabs" role="tablist">
+					<li class="nav-item"> <a class="nav-link active" data-toggle="tab" href="#menu1" id="menu1">Errors</a> </li>
+					<li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#menu2">Processing information</a> </li>
+					<li class="nav-item"> <a class="nav-link" data-toggle="tab" href="#menu3">Description</a> </li>
+				</ul>
+				<!-- Tab panes -->
+				<div class="tab-content">
+					<div id="menu1" class="container tab-pane active" style="border:1px solid #eee;">
+						<br />
+						<h3>Errors</h3>
+						<p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+					</div>
+					<div id="menu2" class="container tab-pane fade" style="height:250px; overflow:scroll; border:1px solid #eee;">
+						<br />
+						<h3>Processing information</h3>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+						<p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+					</div>
+					<div id="menu3" class="container tab-pane fade" style="border:1px solid #eee;">
+						<br />
+						<h3>Description</h3>
+						<p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+					</div>
+				</div>
+			</div>
+		</div> <span id="bottompanelbtn" onclick="bottomopenNav()"> <i class="fas fa-angle-up"></i></span>
+		<div class="row">
+			<div class="footer">
+				<div class="col-sm-12 footer_color" style="padding: 10px;">
+					<div class="text-center" style="color: #fff; font-size: 16 + px;">© Copyright 2021 by <a href="http://www.iictechnologies.com/" style="color: #fff;" target="_blank"> IIC Technologies.</a> All Rights Reserved.</div>
+         </div>
+      </div>
+	  </div>
     </div>
     <script>
         function openrightNav() {
             document.getElementById("rightPane").style.width = "290px";
-			document.getElementById("centerPane").style.marginRight = "290px";
+			      document.getElementById("centerPane").style.marginRight = "290px";
             document.getElementById("bottomPane").style.right = "290px";
             document.getElementById("spatialSearchCP").style.width = "100%";
             document.getElementById("queryBuilderCP").style.width = "100%";
-			map.updateSize();
+			      map.updateSize();
         }
 
         function closerightNav() {
             document.getElementById("rightPane").style.width = "0";
             document.getElementById("bottomPane").style.right = "0";
-			document.getElementById("centerPane").style.marginRight = "0px";
-			 document.getElementById("bottomPane").style.marginRight = "0px";
-			 map.updateSize();
-			
+            document.getElementById("centerPane").style.marginRight = "0px";
+            document.getElementById("bottomPane").style.marginRight = "0px";
+            map.updateSize();            
         }
-
         function LeftopenNav() {
             document.getElementById("leftPane").style.width = "290px";
             document.getElementById("bottomPane").style.left = "290px";
-			document.getElementById("centerPane").style.marginLeft = "290px";
-			map.updateSize();
+            document.getElementById("centerPane").style.marginLeft = "290px";
+            map.updateSize();
         }
 
         function LeftcloseNav() {
             document.getElementById("leftPane").style.width = "0";
             document.getElementById("bottomPane").style.left = "0";
-			document.getElementById("centerPane").style.marginLeft = "0px";
-			 document.getElementById("bottomPane").style.marginLeft = "0px";
-			 map.updateSize();
+            document.getElementById("centerPane").style.marginLeft = "0px";
+            document.getElementById("bottomPane").style.marginLeft = "0px";
+            map.updateSize();
         }
 
         function bottomopenNav() {
             document.getElementById("bottomPane").style.display = "block";
             document.getElementById("closebottomnav").style.display = "block";
             document.getElementById("bottompanelbtn").style.display = "none";
-			map.updateSize();
+			      map.updateSize();
         }
 
         function bottomcloseNav() {
             document.getElementById("bottomPane").style.display = "none";
             document.getElementById("closebottomnav").style.display = "none";
             document.getElementById("bottompanelbtn").style.display = "block";
-			map.updateSize();
+			      map.updateSize();
         }
         function bottomopenNav_2() {
             document.getElementById("bottomPane_2").style.height = "270px";
             document.getElementById("closebottomnav_2").style.display = "block";
             document.getElementById("bottompanelbtn_2").style.display = "none";
         }
-        function bottomcloseNav_2() {
-          
+        function bottomcloseNav_2() {          
             document.getElementById("bottomPane_2").style.height = "0";
             document.getElementById("closebottomnav_2").style.display = "none";
             document.getElementById("bottompanelbtn_2").style.display = "block";
         }
-		 </script>
-		
-        <!-- <script src="js/jquery.min.js"></script> -->
+		 </script>	
+        
   <script src="{% static "js/popper.min.js" %}"></script>
-  <script src="{% static "js/bootstrap.min.js" %}"></script>
-     
-   
-   
-   
+  <script src="{% static "js/bootstrap.min.js" %}"></script>   
 </body>
 </html>

@@ -13,7 +13,10 @@ import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+
+#BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 
 
 # Quick-start development settings - unsuitable for production
@@ -32,6 +35,7 @@ ALLOWED_HOSTS = []
 
 INSTALLED_APPS = [
     'file_reading.apps.FileReadingConfig',
+    'validation.apps.ValidationConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -39,6 +43,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework.authtoken'
+    #'rest_framework_swagger',
+    #'rest_framework_gis',
+    #'django.contrib.gis',
 ]
 
 MIDDLEWARE = [
@@ -76,9 +84,13 @@ WSGI_APPLICATION = 'S100Ver_Val.wsgi.application'
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+    'default': {        
+        'ENGINE': 'django.contrib.gis.db.backends.postgis',        
+        'NAME': 's100',        
+        'USER': 's100',
+        'PASSWORD': 's100123#',
+        'HOST': 'devfarm',
+        'PORT': '5600',          
     }
 }
 
@@ -124,6 +136,12 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"), '.',
 ]
+
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework.authentication.TokenAuthentication',
+    ),
+}
 # Default primary key field type
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
@@ -159,3 +177,8 @@ LOGGING = {
         }
     }
 }
+
+OSGEO_VENV = r'C:\Program Files\Python37\Lib\site-packages\osgeo'
+os.environ['GEOS_LIBRARY_PATH'] =  OSGEO_VENV + r"\geos_c.dll"
+os.environ['GDAL_LIBRARY_PATH'] = OSGEO_VENV + r"\gdal301.dll"
+os.environ["PATH"] += os.pathsep + str(OSGEO_VENV)

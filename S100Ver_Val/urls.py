@@ -16,11 +16,21 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from file_reading.api import router
-from file_reading.views import polygon
+from validation.api import router_validation
+from file_reading.views import S100READINGFILE
 from django.urls import include, path
+from rest_framework.authtoken.views import obtain_auth_token
 
 urlpatterns = [
-    #path('', include(router.urls)),
+    path('Login', S100READINGFILE.Login, name='Login'),
+    path('signup', S100READINGFILE.signup, name='signup'),
+    path('changepassword', S100READINGFILE.changepassword, name='changepassword'),
+    path('', include(router.urls)),
+    path('', include(router_validation.urls)),
     path('admin/', admin.site.urls),
-    path('home', polygon.home, name='home'),
+    path('home', S100READINGFILE.home, name='home'),
+    #path('swagger', schema_view),
+    path('api-token-auth', obtain_auth_token, name='api_token_auth'),     
+
+
 ]
